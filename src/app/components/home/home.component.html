@@ -1,0 +1,34 @@
+<div class="container mt-4">
+  <h2 class="text-center mb-4">School Timetable</h2>
+
+  <div class="mb-3">
+    <label for="daySelect" class="form-label">Select Day:</label>
+    <select id="daySelect" class="form-select" [(ngModel)]="currentDay" (change)="onDayChange($event)">
+      <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+    </select>
+  </div>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th *ngFor="let class of classes">{{ class }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let period of periods">
+        <tr>
+          <td>{{ period }}</td>
+          <ng-container *ngIf="period === '12:30 - 1:10'">
+            <td [attr.colspan]="classes.length + 1" class="text-center table-secondary">Lunch Break (12:30 - 1:10)</td>
+          </ng-container>
+          <ng-container *ngIf="period !== '12:30 - 1:10'">
+            <td *ngFor="let class of classes">
+              {{ getAssignment(currentDay, period, class) }}
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
