@@ -1,46 +1,46 @@
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-header">
-          <h4 class="text-center">{{ isLoginMode ? 'Login' : 'Register' }}</h4>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="row w-100">
+    <div class="col-md-8 col-lg-6 mx-auto">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header text-white bg-primary text-center py-4 rounded-top-lg">
+          <h4 class="mb-0">{{ isLoginMode ? 'Login' : 'Register' }}</h4>
         </div>
-        <div class="card-body">
+        <div class="card-body p-4">
           <form (ngSubmit)="isLoginMode ? onLogin() : onRegister()">
             <div class="mb-3">
               <label for="email" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="email" [(ngModel)]="email" name="email" required>
+              <input type="email" class="form-control form-control-lg" id="email" [(ngModel)]="email" name="email" required>
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" [(ngModel)]="password" name="password" required>
+              <input type="password" class="form-control form-control-lg" id="password" [(ngModel)]="password" name="password" required>
             </div>
 
             <ng-container *ngIf="!isLoginMode">
               <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" [(ngModel)]="name" name="name" required>
+                <input type="text" class="form-control form-control-lg" id="name" [(ngModel)]="name" name="name" required>
               </div>
               <div class="mb-3">
                 <label for="subject" class="form-label">Subject (for Teachers)</label>
-                <input type="text" class="form-control" id="subject" [(ngModel)]="subject" name="subject">
+                <input type="text" class="form-control form-control-lg" id="subject" [(ngModel)]="subject" name="subject">
               </div>
               <div class="mb-3">
                 <label for="role" class="form-label">Role</label>
-                <select class="form-select" id="role" [(ngModel)]="role" name="role" required>
+                <select class="form-select form-select-lg" id="role" [(ngModel)]="role" name="role" required>
                   <option value="teacher">Teacher</option>
                   <option value="admin">Admin</option>
                 </select>
               </div>
             </ng-container>
 
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">{{ isLoginMode ? 'Login' : 'Register' }}</button>
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-primary btn-lg">{{ isLoginMode ? 'Login' : 'Register' }}</button>
             </div>
           </form>
-          <hr>
-          <p class="text-center">
-            <a href="#" (click)="isLoginMode = !isLoginMode">{{ isLoginMode ? 'Need an account? Register' : 'Already have an account? Login' }}</a>
+          <hr class="my-4">
+          <p class="text-center mb-0">
+            <a href="#" (click)="isLoginMode = !isLoginMode" class="text-decoration-none">{{ isLoginMode ? 'Need an account? Register' : 'Already have an account? Login' }}</a>
           </p>
         </div>
       </div>

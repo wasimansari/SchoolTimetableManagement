@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, addDoc, updateDoc, deleteDoc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 export interface SubjectTeacher {
@@ -13,6 +13,7 @@ export interface SubjectTeacher {
 })
 export class FirestoreService {
   private subjectTeacherCollection = collection(this.firestore, 'subject-teachers');
+  private usersCollection = collection(this.firestore, 'users');
 
   constructor(private firestore: Firestore) { }
 
@@ -33,5 +34,10 @@ export class FirestoreService {
   deleteSubjectTeacher(id: string) {
     const docRef = doc(this.firestore, `subject-teachers/${id}`);
     return deleteDoc(docRef);
+  }
+
+  async getUserData(uid: string) {
+    const userDoc = await getDoc(doc(this.firestore, `users/${uid}`));
+    return userDoc.exists() ? userDoc.data() : null;
   }
 }
