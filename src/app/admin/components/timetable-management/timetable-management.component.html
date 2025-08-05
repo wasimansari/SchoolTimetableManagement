@@ -1,0 +1,222 @@
+<!-- Assign Class to Teacher -->
+<div class="card shadow-lg mb-4 rounded-lg border-0">
+  <div class="card-header bg-secondary text-white py-3 rounded-top-lg">
+    <h5 class="mb-0">Assign Class to Teacher</h5>
+  </div>
+  <div class="card-body p-4">
+    <form (ngSubmit)="assignClassToTeacher()">
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label for="assignDay" class="form-label">Day</label>
+          <select class="form-select form-select-lg" id="assignDay" [(ngModel)]="selectedDay" name="selectedDay" (change)="onAssignmentDayChange()" required>
+            <option value="" disabled selected>Select Day</option>
+            <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="assignClass" class="form-label">Class</label>
+          <select class="form-select form-select-lg" id="assignClass" [(ngModel)]="selectedClass" name="selectedClass" required>
+            <option value="" disabled selected>Select Class</option>
+            <option *ngFor="let class of classes" [value]="class.name">{{ class.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="assignPeriod" class="form-label">Period</label>
+          <select class="form-select form-select-lg" id="assignPeriod" [(ngModel)]="selectedPeriod" name="selectedPeriod" required>
+            <option value="" disabled selected>Select Period</option>
+            <option *ngFor="let period of periods" [value]="period.period">{{ period.period }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="assignSubject" class="form-label">Subject</label>
+          <select class="form-select form-select-lg" id="assignSubject" [(ngModel)]="selectedSubject" name="selectedSubject" required>
+            <option value="" disabled selected>Select Subject</option>
+            <option *ngFor="let subject of subjects" [value]="subject">{{ subject }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="assignTeacher" class="form-label">Teacher</label>
+          <select class="form-select form-select-lg" id="assignTeacher" [(ngModel)]="selectedTeacherId" name="selectedTeacherId" required>
+            <option value="" disabled selected>Select Teacher</option>
+            <option *ngFor="let teacher of availableTeachers" [value]="teacher.id">{{ teacher.teacherName }}</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Assign Class</button>
+    </form>
+  </div>
+</div>
+
+<!-- Copy Routine -->
+<div class="card shadow-lg mb-4 rounded-lg border-0">
+  <div class="card-header bg-secondary text-white py-3 rounded-top-lg">
+    <h5 class="mb-0">Copy Routine</h5>
+  </div>
+  <div class="card-body p-4">
+    <form (ngSubmit)="copyRoutine()">
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <label for="sourceDay" class="form-label">Copy From Day</label>
+          <select class="form-select form-select-lg" id="sourceDay" [(ngModel)]="sourceDay" name="sourceDay" required>
+            <option value="" disabled selected>Select Day</option>
+            <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="targetDay" class="form-label">Copy To Day</label>
+          <select class="form-select form-select-lg" id="targetDay" [(ngModel)]="targetDay" name="targetDay" required>
+            <option value="" disabled selected>Select Day</option>
+            <option *ngFor="let day of daysOfWeek" [value]="day">{{ day }}</option>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="continueForNextDays" [(ngModel)]="continueForNextDays" name="continueForNextDays">
+            <label class="form-check-label" for="continueForNextDays">
+              Continue for next days
+            </label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg">Copy Routine</button>
+    </form>
+  </div>
+</div>
+
+<!-- Manage Periods -->
+<div class="card shadow-lg mb-4 rounded-lg border-0">
+  <div class="card-header bg-secondary text-white py-3 rounded-top-lg">
+    <h5 class="mb-0">Manage Periods</h5>
+  </div>
+  <div class="card-body p-4">
+    <form (ngSubmit)="addOrUpdatePeriod()">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <input type="text" class="form-control form-control-sm" placeholder="Period (e.g., 9:30 - 10:15)" [(ngModel)]="newPeriod" name="newPeriod">
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+          <button type="submit" class="btn btn-primary btn-sm w-100">{{ editingPeriod ? 'Update Period' : 'Add Period' }}</button>
+          <button type="button" class="btn btn-secondary btn-sm ms-2" *ngIf="editingPeriod" (click)="cancelEditPeriod()">Cancel</button>
+        </div>
+      </div>
+    </form>
+    <hr class="my-4">
+    <h6 class="mt-4">Existing Periods</h6>
+    <div class="table-responsive">
+      <table class="table table-hover table-striped align-middle rounded-lg overflow-hidden">
+        <thead class="table-light">
+          <tr>
+            <th>Period</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let period of periods">
+            <td>{{ period.period }}</td>
+            <td class="text-end">
+              <button class="btn btn-info btn-sm me-2" (click)="editPeriod(period)">Edit</button>
+              <button class="btn btn-danger btn-sm" (click)="deletePeriod(period.id)">Remove</button>
+            </td>
+          </tr>
+          <tr *ngIf="periods.length === 0">
+            <td colspan="2" class="text-center text-muted">No periods added yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Manage Classes -->
+<div class="card shadow-lg mb-4 rounded-lg border-0">
+  <div class="card-header bg-secondary text-white py-3 rounded-top-lg">
+    <h5 class="mb-0">Manage Classes</h5>
+  </div>
+  <div class="card-body p-4">
+    <form (ngSubmit)="addOrUpdateClass()">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <input type="text" class="form-control form-control-sm" placeholder="Class Name (e.g., Class 6)" [(ngModel)]="newClass" name="newClass">
+        </div>
+        <div class="col-md-4 d-flex align-items-center">
+          <button type="submit" class="btn btn-primary btn-sm w-100">{{ editingClass ? 'Update Class' : 'Add Class' }}</button>
+          <button type="button" class="btn btn-secondary btn-sm ms-2" *ngIf="editingClass" (click)="cancelEditClass()">Cancel</button>
+        </div>
+      </div>
+    </form>
+    <hr class="my-4">
+    <h6 class="mt-4">Existing Classes</h6>
+    <div class="table-responsive">
+      <table class="table table-hover table-striped align-middle rounded-lg overflow-hidden">
+        <thead class="table-light">
+          <tr>
+            <th>Class Name</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let class of classes">
+            <td>{{ class.name }}</td>
+            <td class="text-end">
+              <button class="btn btn-info btn-sm me-2" (click)="editClass(class)">Edit</button>
+              <button class="btn btn-danger btn-sm" (click)="deleteClass(class.id)">Remove</button>
+            </td>
+          </tr>
+          <tr *ngIf="classes.length === 0">
+            <td colspan="2" class="text-center text-muted">No classes added yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Manage Teacher Leave -->
+<div class="card shadow-lg rounded-lg border-0">
+  <div class="card-header bg-secondary text-white py-3 rounded-top-lg">
+    <h5 class="mb-0">Manage Teacher Leave</h5>
+  </div>
+  <div class="card-body p-4">
+    <form (ngSubmit)="addLeave()">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <select class="form-select form-select-sm" [(ngModel)]="selectedTeacherId" name="selectedTeacherId" required>
+            <option value="" disabled selected>Select Teacher</option>
+            <option *ngFor="let teacher of teachers" [value]="teacher.id">{{ teacher.teacherName }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <input type="date" class="form-control form-control-sm" [(ngModel)]="leaveDate" name="leaveDate" required>
+        </div>
+        <div class="col-md-2 d-flex align-items-center">
+          <button type="submit" class="btn btn-primary btn-sm w-100">Add Leave</button>
+        </div>
+      </div>
+    </form>
+    <hr class="my-4">
+    <h6 class="mt-4">Upcoming Leave</h6>
+    <div class="table-responsive">
+      <table class="table table-hover table-striped align-middle rounded-lg overflow-hidden">
+        <thead class="table-light">
+          <tr>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let leave of leaves">
+            <td>{{ getTeacherName(leave.teacherId) }}</td>
+            <td>{{ leave.date }}</td>
+            <td class="text-end">
+              <button class="btn btn-danger btn-sm" (click)="deleteLeave(leave.id)">Remove</button>
+            </td>
+          </tr>
+          <tr *ngIf="leaves.length === 0">
+            <td colspan="3" class="text-center text-muted">No upcoming leave.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

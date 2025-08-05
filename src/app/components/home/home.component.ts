@@ -13,17 +13,11 @@ import { TimetableService } from '../../services/timetable.service';
 export class HomeComponent implements OnInit {
   timetable: any[] = [];
   teachers: any[] = [];
+  leaves: any[] = [];
   currentDay: string = '';
   daysOfWeek: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  periods: string[] = [
-    '9:30 - 10:15',
-    '10:15 - 11:00',
-    '11:00 - 11:45',
-    '11:45 - 12:30',
-    '1:10 - 1:55',
-    '1:55 - 2:40'
-  ];
-  classes: string[] = ['Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10', 'Class 11', 'Class 12'];
+  periods: any[] = [];
+  classes: any[] = [];
 
   constructor(private timetableService: TimetableService) { }
 
@@ -41,6 +35,18 @@ export class HomeComponent implements OnInit {
     this.timetableService.getTeachers().subscribe(data => {
       this.teachers = data;
     });
+
+    this.timetableService.getPeriods().subscribe(data => {
+      this.periods = data.sort((a, b) => a.period.localeCompare(b.period));
+    });
+
+    this.timetableService.getClasses().subscribe(data => {
+      this.classes = data.sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    this.timetableService.getLeave().subscribe(data => {
+      this.leaves = data;
+    });
   }
 
   getAssignment(day: string, period: string, className: string): string {
@@ -51,7 +57,21 @@ export class HomeComponent implements OnInit {
     );
     if (assignment) {
       const teacher = this.teachers.find(t => t.id === assignment.teacherId);
-      return `${assignment.subject} (${teacher ? teacher.teacherName : 'N/A'})`;
+      const teacherName = teacher ? teacher.teacherName : 'N/A';
+
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth();
+      const dayOfMonth = today.getDate() - today.getDay() + this.daysOfWeek.indexOf(day) + 1;
+      const assignmentDate = new Date(year, month, dayOfMonth).toISOString().split('T')[0];
+
+      const onLeave = this.leaves.find(l => l.teacherId === assignment.teacherId && l.date === assignmentDate);
+
+      if (onLeave) {
+        return `On Leave (${teacherName})`;
+      }
+
+      return `${assignment.subject} (${teacherName})`;
     }
     return '';
   }

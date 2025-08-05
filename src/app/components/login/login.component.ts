@@ -38,6 +38,17 @@ export class LoginComponent {
     }
   }
 
+  async onLoginWithGoogle() {
+    try {
+      const userCredential = await this.authService.loginWithGoogle();
+      console.log('User logged in with Google:', userCredential.user);
+      this.router.navigate(['/home']); // Navigate to home after login
+    } catch (error) {
+      console.error('Google login failed:', error);
+      alert('Google login failed. Please try again.');
+    }
+  }
+
   async onRegister() {
     try {
       const userCredential = await this.authService.registerUser(this.email, this.password);

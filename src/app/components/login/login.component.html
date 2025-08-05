@@ -38,6 +38,9 @@
               <button type="submit" class="btn btn-primary btn-lg">{{ isLoginMode ? 'Login' : 'Register' }}</button>
             </div>
           </form>
+          <div *ngIf="isLoginMode" class="d-grid mt-2">
+            <button (click)="onLoginWithGoogle()" class="btn btn-danger btn-lg">Login with Google</button>
+          </div>
           <hr class="my-4">
           <p class="text-center mb-0">
             <a href="#" (click)="isLoginMode = !isLoginMode" class="text-decoration-none">{{ isLoginMode ? 'Need an account? Register' : 'Already have an account? Login' }}</a>

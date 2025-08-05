@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, authState, User } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, authState, User, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { FirestoreService } from './firestore.service';
@@ -36,6 +36,27 @@ export class AuthService {
 
   login(email: string, password: string) {
     return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(this.auth, provider);
+    const user = userCredential.user;
+
+    // Check if the user already exists in Firestore
+    const existingUser = await this.firestoreService.getUserData(user.uid);
+    if (!existingUser) {
+      // If the user doesn't exist, save their data to Firestore
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        name: user.displayName,
+        role: 'teacher' // Default role for Google login
+      };
+      await this.firestoreService.saveUserData(user.uid, userData);
+    }
+
+    return userCredential;
   }
 
   registerUser(email: string, password: string) {

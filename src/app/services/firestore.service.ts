@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, addDoc, updateDoc, deleteDoc, getDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, doc, addDoc, updateDoc, deleteDoc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 export interface SubjectTeacher {
@@ -39,5 +39,9 @@ export class FirestoreService {
   async getUserData(uid: string) {
     const userDoc = await getDoc(doc(this.firestore, `users/${uid}`));
     return userDoc.exists() ? userDoc.data() : null;
+  }
+
+  saveUserData(uid: string, data: any) {
+    return setDoc(doc(this.firestore, `users/${uid}`), data, { merge: true });
   }
 }
